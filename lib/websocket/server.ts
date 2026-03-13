@@ -37,7 +37,11 @@ export class MissionControlWebSocketServer {
       });
 
       // Send initial system metrics
-      this.sendSystemMetrics(clientId);
+      this.sendToClient(clientId, {
+        type: 'system_metrics',
+        payload: this.generateSystemMetrics(),
+        timestamp: new Date().toISOString()
+      });
 
       // Handle messages from client
       ws.on('message', (data: Buffer) => {

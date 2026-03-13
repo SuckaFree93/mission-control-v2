@@ -75,7 +75,7 @@ export class AuthenticationService {
     return jwt.sign(
       { userId, role, iat: Math.floor(Date.now() / 1000) },
       this.jwtSecret,
-      { expiresIn: this.tokenExpiry }
+      { expiresIn: this.tokenExpiry } as jwt.SignOptions
     );
   }
 

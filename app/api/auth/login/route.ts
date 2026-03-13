@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const authService = getAuthService();
     const body = await request.json();
-    const ipAddress = request.headers.get('x-forwarded-for') || request.ip || 'unknown';
+    const ipAddress = request.headers.get('x-forwarded-for') || 'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
 
     const result = await authService.login(body, ipAddress, userAgent);
