@@ -6,6 +6,7 @@ import { NavigationRail } from '@/components/layout/navigation-rail'
 import { AgentFeed } from '@/components/charts/agent-feed'
 import { BuildTimeline } from '@/components/charts/build-timeline'
 import { SystemHUD } from '@/components/charts/system-hud'
+import { LiveMetrics } from '@/components/dashboard/LiveMetrics'
 
 export function DesktopLayout() {
   return (
@@ -38,13 +39,21 @@ export function DesktopLayout() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <AgentFeed />
+            <LiveMetrics />
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
+          >
+            <AgentFeed />
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
           >
             <BuildTimeline />
           </motion.div>
