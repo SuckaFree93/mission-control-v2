@@ -154,50 +154,54 @@ export function LiveMetrics() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           >
             {/* CPU Usage */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
+            <div className="flex flex-col items-center space-y-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+              <div className="flex items-center justify-between w-full">
                 <span className="text-sm font-medium text-gray-300">CPU Usage</span>
                 <span className="text-lg font-bold text-white">{metrics.cpu.usage.toFixed(1)}%</span>
               </div>
-              <CircularProgress
-                value={metrics.cpu.usage}
-                size={80}
-                strokeWidth={8}
-                color="from-cyan-400 to-blue-500"
-              />
+              <div className="relative">
+                <CircularProgress
+                  value={metrics.cpu.usage}
+                  size={100}
+                  strokeWidth={10}
+                  color="from-cyan-400 to-blue-500"
+                />
+              </div>
               <div className="text-xs text-gray-400 text-center">
                 {metrics.cpu.cores} cores
               </div>
             </div>
 
             {/* Memory Usage */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
+            <div className="flex flex-col items-center space-y-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+              <div className="flex items-center justify-between w-full">
                 <span className="text-sm font-medium text-gray-300">Memory</span>
                 <span className="text-lg font-bold text-white">{metrics.memory.percentage}%</span>
               </div>
-              <CircularProgress
-                value={metrics.memory.percentage}
-                size={80}
-                strokeWidth={8}
-                color="from-purple-400 to-pink-500"
-              />
+              <div className="relative">
+                <CircularProgress
+                  value={metrics.memory.percentage}
+                  size={100}
+                  strokeWidth={10}
+                  color="from-purple-400 to-pink-500"
+                />
+              </div>
               <div className="text-xs text-gray-400 text-center">
                 {metrics.memory.used}MB / {metrics.memory.total}MB
               </div>
             </div>
 
             {/* Network */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
+            <div className="flex flex-col items-center space-y-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+              <div className="flex items-center justify-between w-full">
                 <span className="text-sm font-medium text-gray-300">Network</span>
                 <span className="text-lg font-bold text-white">{metrics.network.connections}</span>
               </div>
               <div className="relative">
-                <div className="w-20 h-20 mx-auto rounded-full border-4 border-blue-500/30 flex items-center justify-center">
+                <div className="w-24 h-24 mx-auto rounded-full border-4 border-blue-500/30 flex items-center justify-center">
                   <div className="text-2xl font-bold text-white">{metrics.network.connections}</div>
                 </div>
                 <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-400 animate-spin" />
@@ -208,13 +212,13 @@ export function LiveMetrics() {
             </div>
 
             {/* Agents */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
+            <div className="flex flex-col items-center space-y-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm">
+              <div className="flex items-center justify-between w-full">
                 <span className="text-sm font-medium text-gray-300">Active Agents</span>
                 <span className="text-lg font-bold text-white">{metrics.agents.active}/{metrics.agents.total}</span>
               </div>
               <div className="relative">
-                <div className="w-20 h-20 mx-auto rounded-full border-4 border-green-500/30 flex items-center justify-center">
+                <div className="w-24 h-24 mx-auto rounded-full border-4 border-green-500/30 flex items-center justify-center">
                   <div className="text-2xl font-bold text-white">{metrics.agents.active}</div>
                 </div>
                 <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-green-400 animate-pulse" />
