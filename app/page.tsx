@@ -1,12 +1,12 @@
-import { DesktopLayout } from '@/components/layout/desktop-layout'
+import { CyberpunkDashboard } from '@/components/dashboard/CyberpunkDashboard'
 import { MobileLayout } from '@/components/layout/mobile-layout'
 
 export default function Home() {
   return (
     <>
-      {/* Desktop Version (hidden on mobile) */}
+      {/* Cyberpunk Dashboard (hidden on mobile) */}
       <div className="hidden lg:block">
-        <DesktopLayout />
+        <CyberpunkDashboard />
       </div>
       
       {/* Mobile Version (hidden on desktop) */}

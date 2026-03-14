@@ -35,11 +35,27 @@ export function CircularProgress({
           className="fill-none stroke-white/10"
         />
         
-        {/* Progress circle with gradient */}
+        {/* Progress circle with cyberpunk gradient */}
         <defs>
-          <linearGradient id={`gradient-${color}`} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={color.includes('cyan') ? '#22d3ee' : color.includes('purple') ? '#a855f7' : '#3b82f6'} />
-            <stop offset="100%" stopColor={color.includes('cyan') ? '#3b82f6' : color.includes('purple') ? '#ec4899' : '#8b5cf6'} />
+          <linearGradient id={`gradient-${color.replace(/[\[\]]/g, '').replace(/\s+/g, '-')}`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={
+              color.includes('[#00f3ff]') ? '#00f3ff' :
+              color.includes('[#8a2be2]') ? '#8a2be2' :
+              color.includes('[#00ff9d]') ? '#00ff9d' :
+              color.includes('[#ff00ff]') ? '#ff00ff' :
+              color.includes('cyan') ? '#22d3ee' : 
+              color.includes('purple') ? '#a855f7' : 
+              '#3b82f6'
+            } />
+            <stop offset="100%" stopColor={
+              color.includes('[#00ff9d]') ? '#00ff9d' :
+              color.includes('[#ff00ff]') ? '#ff00ff' :
+              color.includes('[#00f3ff]') ? '#00f3ff' :
+              color.includes('[#8a2be2]') ? '#8a2be2' :
+              color.includes('cyan') ? '#3b82f6' : 
+              color.includes('purple') ? '#ec4899' : 
+              '#8b5cf6'
+            } />
           </linearGradient>
         </defs>
         
@@ -48,7 +64,7 @@ export function CircularProgress({
           cy={size / 2}
           r={radius}
           strokeWidth={strokeWidth}
-          stroke={`url(#gradient-${color})`}
+          stroke={`url(#gradient-${color.replace(/[\[\]]/g, '').replace(/\s+/g, '-')})`}
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -56,7 +72,13 @@ export function CircularProgress({
           animate={{ strokeDashoffset: offset }}
           transition={{ duration: 1, ease: "easeOut" }}
           style={{
-            filter: 'drop-shadow(0 0 12px rgba(59, 130, 246, 0.4))',
+            filter: `drop-shadow(0 0 15px ${
+              color.includes('[#00f3ff]') ? 'rgba(0, 243, 255, 0.6)' :
+              color.includes('[#8a2be2]') ? 'rgba(138, 43, 226, 0.6)' :
+              color.includes('[#00ff9d]') ? 'rgba(0, 255, 157, 0.6)' :
+              color.includes('[#ff00ff]') ? 'rgba(255, 0, 255, 0.6)' :
+              'rgba(59, 130, 246, 0.4)'
+            })`,
           }}
         />
       </svg>
