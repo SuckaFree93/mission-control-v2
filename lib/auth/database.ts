@@ -39,9 +39,21 @@ export class AuthDatabase {
       console.log('Initializing Authentication Database...');
       
       // Use file-based database for auth to persist user data
-      const dbPath = process.env.NODE_ENV === 'production'
-        ? '/tmp/auth.db' // For Vercel/serverless
-        : path.join(process.cwd(), 'auth.db');
+      let dbPath: string;
+      
+      if (process.env.VERCEL) {
+        // On Vercel, use /tmp directory which is writable
+        dbPath = '/tmp/auth.db';
+        console.log('📦 Vercel environment detected, using /tmp/auth.db');
+      } else if (process.env.NODE_ENV === 'production') {
+        // Other production environments
+        dbPath = path.join(process.cwd(), 'auth.db');
+      } else {
+        // Development
+        dbPath = path.join(process.cwd(), 'auth.db');
+      }
+      
+      console.log(`📁 Database path: ${dbPath}`);
       
       this.db = await open({
         filename: dbPath,
