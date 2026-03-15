@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
-import CyberpunkDashboard from '@/components/dashboard/CyberpunkDashboard';
+import { CyberpunkDashboard } from '@/components/dashboard/CyberpunkDashboard';
 import Link from 'next/link';
 
 export default function DashboardPage() {
