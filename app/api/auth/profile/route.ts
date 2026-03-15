@@ -1,7 +1,7 @@
 // User Profile API (Protected)
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthService } from '@/lib/auth/jwt-service';
-import { getAuthDatabase } from '@/lib/auth/database';
+import { getAuthDB } from '@/lib/auth/database';
 import { authenticate, getUserFromRequest } from '@/lib/auth/middleware';
 
 export async function GET(request: NextRequest) {
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const db = getAuthDatabase();
+    const db = await getAuthDB();
     const userData = db.getUserById(user.userId);
 
     if (!userData) {
@@ -98,7 +98,7 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    const db = getAuthDatabase();
+    const db = await getAuthDB();
     
     // Check if new username/email already exists
     if (username && username !== user.username) {

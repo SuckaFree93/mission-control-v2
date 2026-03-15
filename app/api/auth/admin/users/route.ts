@@ -1,6 +1,6 @@
 // Admin Users Management API
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthDatabase } from '@/lib/auth/database';
+import { getAuthDB } from '@/lib/auth/database';
 import { adminMiddleware } from '@/lib/auth/middleware';
 
 export async function GET(request: NextRequest) {
@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     const authError = await adminMiddleware(request);
     if (authError) return authError;
 
-    const db = getAuthDatabase();
+    const db = await getAuthDB();
     
     // Get all users (excluding password hashes)
     const users = db.db.prepare(`
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const db = getAuthDatabase();
+    const db = await getAuthDB();
 
     switch (action) {
       case 'update_role':
