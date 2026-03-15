@@ -25,9 +25,9 @@ export async function authenticate(request: NextRequest): Promise<NextResponse |
   const authService = getAuthService();
   
   const validation = await authService.validateToken(token);
-  if (!validation) {
+  if (!validation.valid || !validation.user) {
     return NextResponse.json(
-      { success: false, error: 'Invalid or expired token' },
+      { success: false, error: validation.error || 'Invalid or expired token' },
       { status: 401 }
     );
   }

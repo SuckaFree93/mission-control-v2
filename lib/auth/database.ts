@@ -195,7 +195,12 @@ export class AuthDatabase {
     return user || null;
   }
 
-  async createUser(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'isActive'>): Promise<User> {
+  async createUser(userData: {
+    email: string;
+    username: string;
+    passwordHash: string;
+    role?: 'admin' | 'user' | 'viewer';
+  }): Promise<User> {
     if (!this.db) throw new Error('Database not initialized');
     
     const id = uuidv4();
@@ -237,7 +242,15 @@ export class AuthDatabase {
     );
   }
 
-  async createSession(sessionData: Omit<Session, 'id' | 'createdAt'>): Promise<Session> {
+  async createSession(sessionData: {
+    userId: string;
+    token: string;
+    refreshToken: string;
+    expiresAt: string;
+    userAgent?: string;
+    ipAddress?: string;
+    isRevoked?: boolean;
+  }): Promise<Session> {
     if (!this.db) throw new Error('Database not initialized');
     
     const id = uuidv4();
