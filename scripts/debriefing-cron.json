@@ -1,0 +1,157 @@
+{
+  "name": "Mission Control v2 Debriefing Schedule",
+  "description": "Automated daily and weekly debriefing reports",
+  "version": "1.0.0",
+  "schedule": {
+    "daily_morning": {
+      "description": "Daily morning debriefing at 8 AM EST",
+      "cron": "0 8 * * *",
+      "timezone": "America/New_York",
+      "command": "node scripts/debriefing.js daily",
+      "enabled": true,
+      "notifications": {
+        "telegram": true,
+        "email": false,
+        "slack": false
+      }
+    },
+    "daily_evening": {
+      "description": "Daily evening debriefing at 6 PM EST",
+      "cron": "0 18 * * *",
+      "timezone": "America/New_York",
+      "command": "node scripts/debriefing.js daily",
+      "enabled": true,
+      "notifications": {
+        "telegram": true,
+        "email": false,
+        "slack": false
+      }
+    },
+    "weekly": {
+      "description": "Weekly debriefing every Sunday at 10 AM EST",
+      "cron": "0 10 * * 0",
+      "timezone": "America/New_York",
+      "command": "node scripts/debriefing.js weekly",
+      "enabled": true,
+      "notifications": {
+        "telegram": true,
+        "email": true,
+        "slack": false
+      }
+    }
+  },
+  "timezone_conversions": {
+    "est": {
+      "name": "Eastern Standard Time",
+      "utc_offset": "-05:00",
+      "dst_offset": "-04:00"
+    },
+    "cst": {
+      "name": "Central Standard Time",
+      "utc_offset": "-06:00",
+      "dst_offset": "-05:00",
+      "note": "Your local timezone (America/Chicago)"
+    },
+    "utc": {
+      "name": "Coordinated Universal Time",
+      "utc_offset": "+00:00"
+    }
+  },
+  "execution_times": {
+    "daily_morning_cst": "7:00 AM",
+    "daily_morning_est": "8:00 AM",
+    "daily_morning_utc": "13:00",
+    "daily_evening_cst": "5:00 PM",
+    "daily_evening_est": "6:00 PM",
+    "daily_evening_utc": "23:00",
+    "weekly_cst": "9:00 AM Sunday",
+    "weekly_est": "10:00 AM Sunday",
+    "weekly_utc": "15:00 Sunday"
+  },
+  "dependencies": {
+    "required": ["node", "npm"],
+    "optional": ["openclaw", "telegram-cli"],
+    "node_version": ">=16.0.0"
+  },
+  "setup_instructions": {
+    "windows": [
+      "1. Open Task Scheduler",
+      "2. Create Basic Task",
+      "3. Name: 'Mission Control Daily Debriefing'",
+      "4. Trigger: Daily at 7:00 AM",
+      "5. Action: Start program",
+      "6. Program: node.exe",
+      "7. Arguments: scripts/debriefing.js daily",
+      "8. Repeat for evening and weekly tasks"
+    ],
+    "linux_mac": [
+      "1. Edit crontab: crontab -e",
+      "2. Add lines:",
+      "   # Daily morning debriefing (8 AM EST / 13:00 UTC)",
+      "   0 13 * * * cd /path/to/mission-control-v2 && node scripts/debriefing.js daily",
+      "   # Daily evening debriefing (6 PM EST / 23:00 UTC)",
+      "   0 23 * * * cd /path/to/mission-control-v2 && node scripts/debriefing.js daily",
+      "   # Weekly debriefing (Sunday 10 AM EST / 15:00 UTC)",
+      "   0 15 * * 0 cd /path/to/mission-control-v2 && node scripts/debriefing.js weekly"
+    ],
+    "docker": [
+      "1. Build image: docker build -t mission-control-debriefing .",
+      "2. Run container with cron:",
+      "   docker run -d --name mc-debriefing mission-control-debriefing"
+    ]
+  },
+  "monitoring": {
+    "log_file": "debriefing.log",
+    "error_log": "debriefing-error.log",
+    "retry_on_failure": true,
+    "max_retries": 3,
+    "alert_on_failure": true,
+    "health_check_url": "http://localhost:3000/api/health"
+  },
+  "notification_config": {
+    "telegram": {
+      "bot_token": "${TELEGRAM_BOT_TOKEN}",
+      "chat_id": "${TELEGRAM_CHAT_ID}",
+      "message_template": "📊 Mission Control Debriefing\\n\\n{summary}\\n\\nGenerated: {timestamp}"
+    },
+    "email": {
+      "smtp_server": "${SMTP_SERVER}",
+      "smtp_port": "${SMTP_PORT}",
+      "from_email": "${FROM_EMAIL}",
+      "to_email": "${TO_EMAIL}",
+      "subject_template": "Mission Control {type} Debriefing - {date}"
+    }
+  },
+  "backup": {
+    "enabled": true,
+    "retention_days": 30,
+    "location": "./debriefing-archive/",
+    "compression": true
+  },
+  "testing": {
+    "test_command": "node scripts/debriefing.js test",
+    "manual_test": "node scripts/debriefing.js daily",
+    "verify_output": "Check debriefing.log file"
+  },
+  "troubleshooting": {
+    "common_issues": [
+      {
+        "issue": "Cron job not running",
+        "solution": "Check system timezone, verify cron service is running"
+      },
+      {
+        "issue": "Node not found",
+        "solution": "Use full path to node executable or add to PATH"
+      },
+      {
+        "issue": "Permission denied",
+        "solution": "Check file permissions on debriefing.js"
+      },
+      {
+        "issue": "Database connection failed",
+        "solution": "Verify database is running and credentials are correct"
+      }
+    ],
+    "debug_mode": "NODE_ENV=debug node scripts/debriefing.js daily"
+  }
+}

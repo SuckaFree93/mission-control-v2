@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { CyberpunkLiveMetrics } from './CyberpunkLiveMetrics';
+import { RealTimeMetrics } from './RealTimeMetrics';
 
 export function CyberpunkDashboard() {
   return (
@@ -264,6 +265,16 @@ export function CyberpunkDashboard() {
         </motion.div>
       </div>
 
+      {/* Real-time Metrics Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mt-8"
+      >
+        <RealTimeMetrics />
+      </motion.div>
+
       {/* Footer Status Bar */}
       <motion.footer
         initial={{ opacity: 0, y: 20 }}
@@ -294,6 +305,16 @@ export function CyberpunkDashboard() {
           </div>
         </div>
       </motion.footer>
+
+      {/* Real-time Metrics Section */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mt-8"
+      >
+        <RealTimeMetrics />
+      </motion.div>
     </div>
   );
 }

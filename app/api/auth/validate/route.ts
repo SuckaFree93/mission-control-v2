@@ -1,28 +1,64 @@
+// Token Validation API
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthService } from '@/lib/auth/auth';
+import { getAuthService } from '@/lib/auth/jwt-service';
+import { authenticate } from '@/lib/auth/middleware';
 
 export async function GET(request: NextRequest) {
   try {
-    const authService = getAuthService();
-    const sessionId = request.headers.get('x-session-id');
+    // Authenticate user
+    const authError = await authenticate(request);
+    if (authError) return authError;
+
     const authHeader = request.headers.get('authorization');
-    const token = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
-
-    if (!sessionId || !token) {
-      return NextResponse.json({ valid: false }, { status: 401 });
+    if (!authHeader) {
+      return NextResponse.json(
+        { success: false, error: 'No authorization header' },
+        { status: 400 }
+      );
     }
 
-    const validation = await authService.validateSession(sessionId, token);
-    
-    if (!validation.valid) {
-      return NextResponse.json({ valid: false }, { status: 401 });
+    const token = authHeader.substring(7);
+    const authService = getAuthService();
+
+    // Validate token and get user info
+    const validation = await authService.validateToken(token);
+    if (!validation) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid token' },
+        { status: 401 }
+      );
     }
 
-    return NextResponse.json(validation);
+    // Return user info
+    return NextResponse.json({
+      success: true,
+      message: 'Token is valid',
+      data: {
+        user: {
+          id: validation.user.id,
+          email: validation.user.email,
+          username: validation.user.username,
+          role: validation.user.role,
+          lastLoginAt: validation.user.lastLoginAt,
+        },
+        session: {
+          id: validation.session.id,
+          createdAt: validation.session.createdAt,
+          expiresAt: validation.session.expiresAt,
+        },
+      },
+      timestamp: new Date().toISOString(),
+    });
+
   } catch (error) {
-    console.error('Validation API error:', error);
+    console.error('Token validation error:', error);
+    
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { 
+        success: false, 
+        error: 'Token validation failed',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     );
   }

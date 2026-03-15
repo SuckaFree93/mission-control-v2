@@ -1,22 +1,13 @@
 import { NextRequest } from 'next/server';
-import { WebSocketServer } from 'ws';
-import { MissionControlWebSocketServer } from '@/lib/websocket/server';
 
-// This is a special route for WebSocket connections
-// It will be upgraded to a WebSocket connection by Next.js
-
-// We'll create a global WebSocket server instance
-let wss: MissionControlWebSocketServer | null = null;
-
+// Simple WebSocket endpoint for now
+// In production, this would be upgraded to a WebSocket connection
 export async function GET(request: NextRequest) {
-  // This route handler is for WebSocket upgrade
-  // In a real implementation, we would handle the WebSocket upgrade here
-  // For now, we'll return a response indicating the WebSocket server is running
-  
   return new Response(
     JSON.stringify({
-      status: 'websocket_server_running',
-      message: 'WebSocket server is available at ws://localhost:3000/api/ws',
+      status: 'websocket_endpoint_ready',
+      message: 'WebSocket endpoint is configured',
+      note: 'For full WebSocket functionality, implement a separate WebSocket server',
       endpoints: {
         health: '/api/health',
         auth: {
@@ -24,7 +15,8 @@ export async function GET(request: NextRequest) {
           register: '/api/auth/register',
           logout: '/api/auth/logout',
           validate: '/api/auth/validate'
-        }
+        },
+        agent_monitor: '/api/agent-monitor'
       }
     }),
     {
@@ -34,17 +26,4 @@ export async function GET(request: NextRequest) {
       },
     }
   );
-}
-
-// For WebSocket server initialization, we need to handle it differently
-// In a real Next.js app, we would initialize the WebSocket server
-// when the server starts, not in an API route
-
-// This is a placeholder for WebSocket server initialization
-export function initializeWebSocketServer(server: any) {
-  if (!wss) {
-    wss = new MissionControlWebSocketServer(server);
-    console.log('✅ WebSocket server initialized');
-  }
-  return wss;
 }
