@@ -353,5 +353,5 @@ export class AgentMonitorDatabase {
   }
 }
 
-// Singleton instance
-export const agentMonitorDB = new AgentMonitorDatabase();
+// Note: Use database-factory.ts for getting database instance
+// This exports the class only, not a singleton instance

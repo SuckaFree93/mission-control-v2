@@ -11,14 +11,13 @@
     "start": "next start",
     "vercel-build": "next build",
     "optimize": "node scripts/optimize-build.js",
-    "build:vercel": "npm ci --only=production && next build"
+    "build:vercel": "npm ci --omit=dev && next build"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tabs": "^1.1.13",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/sqlite3": "^3.1.11",
     "@types/ws": "^8.18.1",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
@@ -29,8 +28,6 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "sqlite": "^5.1.1",
-    "sqlite3": "^6.0.1",
     "tailwind-merge": "^3.5.0",
     "uuid": "^13.0.0",
     "ws": "^8.19.0"
@@ -41,6 +38,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/sqlite3": "^3.1.11",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^6.0.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

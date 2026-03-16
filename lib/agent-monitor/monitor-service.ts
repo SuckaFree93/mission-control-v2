@@ -1,6 +1,6 @@
 // Agent Monitor Service - Core monitoring logic
 import { AgentHealth, RecoveryStrategy, DEFAULT_RECOVERY_STRATEGIES, DEFAULT_HEALTH_CONFIG, HealthCheckConfig, RecoveryNotification, RecoveryAttempt } from './types';
-import { agentMonitorDB } from './database';
+import { agentMonitorDB } from './database-factory';
 import { v4 as uuidv4 } from 'uuid';
 
 export class AgentMonitorService {
@@ -18,7 +18,8 @@ export class AgentMonitorService {
 
   private async initialize(): Promise<void> {
     try {
-      await agentMonitorDB.initialize();
+      // Get database instance from factory
+      const db = await agentMonitorDB();
       console.log('Agent Monitor Service initialized');
     } catch (error) {
       console.error('Failed to initialize Agent Monitor Service:', error);

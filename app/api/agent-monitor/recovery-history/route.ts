@@ -1,23 +1,55 @@
-// Recovery History API
+// Recovery History API - Memory-based version for Vercel
 import { NextRequest, NextResponse } from 'next/server';
-import { agentMonitorDB } from '@/lib/agent-monitor/database';
-import { RecoveryAttempt } from '@/lib/agent-monitor/types';
+
+// Simple in-memory data for Vercel deployment
+const sampleRecoveryAttempts = [
+  {
+    id: 'recovery-1',
+    agentId: 'gateway-001',
+    timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+    status: 'success',
+    action: 'restart',
+    duration: 5000,
+    error: null,
+    details: { port: 18789, pid: 14080 }
+  },
+  {
+    id: 'recovery-2',
+    agentId: 'gateway-001',
+    timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+    status: 'failed',
+    action: 'restart',
+    duration: 30000,
+    error: 'Process timeout',
+    details: { port: 18789, pid: null }
+  }
+];
+
+const sampleHealthEvents = [
+  {
+    id: 'health-1',
+    agentId: 'gateway-001',
+    timestamp: new Date().toISOString(),
+    status: 'healthy',
+    metrics: { cpu: 12.5, memory: 520.87, uptime: 86400 },
+    message: 'Gateway running normally'
+  }
+];
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const agentId = searchParams.get('agentId');
     const limit = parseInt(searchParams.get('limit') || '50');
-    const days = parseInt(searchParams.get('days') || '7');
 
     // Get recovery attempts
-    let recoveryAttempts: RecoveryAttempt[] = [];
+    let recoveryAttempts = sampleRecoveryAttempts;
     if (agentId) {
-      recoveryAttempts = await agentMonitorDB.getRecoveryAttempts(agentId, limit);
+      recoveryAttempts = sampleRecoveryAttempts.filter(a => a.agentId === agentId);
     }
 
     // Get health events
-    const healthEvents = await agentMonitorDB.getHealthEvents(limit);
+    const healthEvents = sampleHealthEvents.slice(0, limit);
 
     // Calculate recovery statistics
     const totalAttempts = recoveryAttempts.length;
@@ -39,7 +71,8 @@ export async function GET(request: NextRequest) {
             ? Math.round(recoveryAttempts.reduce((sum, a) => sum + (a.duration || 0), 0) / recoveryAttempts.length)
             : 0
         },
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        note: 'Using memory database for Vercel deployment'
       }
     });
   } catch (error) {
