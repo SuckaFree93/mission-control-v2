@@ -1,22 +1,61 @@
-// Agent Monitor Status API
+// Agent Monitor Status API - Simplified for Vercel
 import { NextRequest, NextResponse } from 'next/server';
-import { agentMonitorService } from '@/lib/agent-monitor/monitor-service';
+
+// Simple in-memory data for Vercel deployment
+const sampleAgents = [
+  { 
+    id: 'gateway-001', 
+    name: 'OpenClaw Gateway', 
+    status: 'healthy',
+    lastHeartbeat: new Date().toISOString(),
+    responseTime: 150,
+    errorCount: 0,
+    uptime: 86400,
+    cpuUsage: 12.5,
+    memoryUsage: 520.87,
+    autoRecoveryEnabled: true,
+    recoveryAttempts: 2,
+    maxRecoveryAttempts: 3,
+    lastRecoveryAttempt: new Date(Date.now() - 3600000).toISOString(),
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
+
+const monitoringStatus = {
+  isMonitoring: true,
+  lastCheck: new Date().toISOString(),
+  totalAgents: 1,
+  healthyAgents: 1,
+  degradedAgents: 0,
+  offlineAgents: 0
+};
+
+const config = {
+  healthCheckInterval: 30000,
+  recoveryTimeout: 60000,
+  maxRecoveryAttempts: 3,
+  enableAutoRecovery: true,
+  notificationChannels: ['telegram']
+};
+
+const recoveryStrategies = [
+  { id: 'restart', name: 'Restart Process', description: 'Restart the agent process', priority: 1 },
+  { id: 'port-check', name: 'Port Check', description: 'Check if port is listening', priority: 2 },
+  { id: 'resource-cleanup', name: 'Resource Cleanup', description: 'Clean up system resources', priority: 3 }
+];
 
 export async function GET(request: NextRequest) {
   try {
-    const agents = agentMonitorService.getAllAgents();
-    const monitoringStatus = agentMonitorService.getMonitoringStatus();
-    const config = agentMonitorService.getConfig();
-    const recoveryStrategies = agentMonitorService.getRecoveryStrategies();
-
     return NextResponse.json({
       success: true,
       data: {
         monitoring: monitoringStatus,
-        agents: agents,
+        agents: sampleAgents,
         config: config,
         recoveryStrategies: recoveryStrategies,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        note: 'Using simplified memory data for Vercel deployment'
       }
     });
   } catch (error) {
@@ -39,17 +78,15 @@ export async function POST(request: NextRequest) {
 
     switch (action) {
       case 'start_monitoring':
-        agentMonitorService.startMonitoring();
         return NextResponse.json({
           success: true,
-          message: 'Monitoring started'
+          message: 'Monitoring started (simulated)'
         });
 
       case 'stop_monitoring':
-        agentMonitorService.stopMonitoring();
         return NextResponse.json({
           success: true,
-          message: 'Monitoring stopped'
+          message: 'Monitoring stopped (simulated)'
         });
 
       case 'register_agent':
@@ -59,10 +96,9 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
         }
-        await agentMonitorService.registerAgent(agentId, params.name, params.tags);
         return NextResponse.json({
           success: true,
-          message: `Agent ${params.name} registered`
+          message: `Agent ${params.name} registered (simulated)`
         });
 
       case 'update_heartbeat':
@@ -72,10 +108,9 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
         }
-        await agentMonitorService.updateAgentHeartbeat(agentId, params.responseTime);
         return NextResponse.json({
           success: true,
-          message: 'Heartbeat updated'
+          message: 'Heartbeat updated (simulated)'
         });
 
       case 'trigger_recovery':
@@ -85,19 +120,15 @@ export async function POST(request: NextRequest) {
             { status: 400 }
           );
         }
-        // This would trigger manual recovery
-        // For now, just log it
-        console.log(`Manual recovery triggered for agent: ${agentId}`);
         return NextResponse.json({
           success: true,
           message: 'Recovery triggered (simulated)'
         });
 
       case 'update_config':
-        agentMonitorService.updateConfig(params.config || {});
         return NextResponse.json({
           success: true,
-          message: 'Configuration updated'
+          message: 'Configuration updated (simulated)'
         });
 
       default:

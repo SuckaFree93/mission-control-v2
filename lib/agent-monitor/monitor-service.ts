@@ -12,7 +12,6 @@ export class AgentMonitorService {
   private eventListeners: Map<string, Function[]> = new Map();
 
   constructor() {
-    super();
     this.initialize();
   }
 
