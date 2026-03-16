@@ -9,7 +9,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "vercel-build": "next build"
+    "vercel-build": "next build",
+    "optimize": "node scripts/optimize-build.js",
+    "build:vercel": "npm ci --only=production && next build"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

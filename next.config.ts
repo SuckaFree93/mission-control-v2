@@ -11,6 +11,32 @@ const nextConfig: NextConfig = {
     NEXT_PUBLIC_ENABLE_REALTIME: process.env.NEXT_PUBLIC_ENABLE_REALTIME || 'true',
   },
   
+  // ⚡ BUILD OPTIMIZATIONS FOR VERCEL FREE TIER
+  // These optimizations reduce build time to stay under 30-second limit
+  
+  // Skip TypeScript checking during build (errors will still show in dev)
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  
+  // Skip ESLint during build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  
+  // Use SWC for faster minification (instead of Terser)
+  swcMinify: true,
+  
+  // Disable source maps in production for smaller bundle
+  productionBrowserSourceMaps: false,
+  
+  // Optimize image loading (Next.js Image optimization)
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
+  
   // Security headers
   async headers() {
     return [

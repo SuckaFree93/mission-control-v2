@@ -15,14 +15,15 @@ export async function GET(request: NextRequest) {
     const database = db.database;
     
     // Get all users (excluding password hashes)
-    const users = database.prepare(`
+    const stmt = await database.prepare(`
       SELECT 
         id, email, username, role,
         created_at as createdAt, updated_at as updatedAt,
         last_login_at as lastLoginAt, is_active as isActive
       FROM users 
       ORDER BY created_at DESC
-    `).all();
+    `);
+    const users = await stmt.all();
 
     // Get statistics
     const stats = {
@@ -85,11 +86,12 @@ export async function POST(request: NextRequest) {
         }
 
         // Update user role
-        database.prepare(`
+        const updateStmt = await database.prepare(`
           UPDATE users 
           SET role = ?, updated_at = ?
           WHERE id = ?
-        `).run(data.role, new Date().toISOString(), userId);
+        `);
+        await updateStmt.run(data.role, new Date().toISOString(), userId);
 
         return NextResponse.json({
           success: true,
