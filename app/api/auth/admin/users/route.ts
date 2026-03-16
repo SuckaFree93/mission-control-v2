@@ -11,9 +11,8 @@ export async function GET(request: NextRequest) {
 
     const db = await getAuthDB();
     
-    // TypeScript doesn't know db.db is initialized, but it is after getAuthDB()
-    // Add non-null assertion since initialize() throws if db fails
-    const database = db.db!;
+    // Use the public getter for database instance
+    const database = db.database;
     
     // Get all users (excluding password hashes)
     const users = database.prepare(`
@@ -74,7 +73,7 @@ export async function POST(request: NextRequest) {
     }
 
     const db = await getAuthDB();
-    const database = db.db!;
+    const database = db.database;
 
     switch (action) {
       case 'update_role':

@@ -34,6 +34,14 @@ export interface Session {
 export class AuthDatabase {
   private db: Database | null = null;
 
+  // Getter for database instance (for direct SQL access when needed)
+  get database(): Database {
+    if (!this.db) {
+      throw new Error('Database not initialized');
+    }
+    return this.db;
+  }
+
   async initialize(): Promise<void> {
     try {
       console.log('Initializing Authentication Database...');
