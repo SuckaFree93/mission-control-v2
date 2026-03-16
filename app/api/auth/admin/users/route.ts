@@ -11,8 +11,12 @@ export async function GET(request: NextRequest) {
 
     const db = await getAuthDB();
     
+    // TypeScript doesn't know db.db is initialized, but it is after getAuthDB()
+    // Add non-null assertion since initialize() throws if db fails
+    const database = db.db!;
+    
     // Get all users (excluding password hashes)
-    const users = db.db.prepare(`
+    const users = database.prepare(`
       SELECT 
         id, email, username, role,
         created_at as createdAt, updated_at as updatedAt,
@@ -70,6 +74,7 @@ export async function POST(request: NextRequest) {
     }
 
     const db = await getAuthDB();
+    const database = db.db!;
 
     switch (action) {
       case 'update_role':
@@ -81,7 +86,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Update user role
-        db.db.prepare(`
+        database.prepare(`
           UPDATE users 
           SET role = ?, updated_at = ?
           WHERE id = ?
@@ -111,7 +116,7 @@ export async function POST(request: NextRequest) {
         }
 
         const newStatus = !user.isActive;
-        db.db.prepare(`
+        database.prepare(`
           UPDATE users 
           SET is_active = ?, updated_at = ?
           WHERE id = ?
@@ -133,8 +138,8 @@ export async function POST(request: NextRequest) {
         }
 
         // Delete user and their sessions
-        db.db.prepare('DELETE FROM sessions WHERE user_id = ?').run(userId);
-        const result = db.db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+        database.prepare('DELETE FROM sessions WHERE user_id = ?').run(userId);
+        const result = database.prepare('DELETE FROM users WHERE id = ?').run(userId);
 
         if (result.changes === 0) {
           return NextResponse.json(
