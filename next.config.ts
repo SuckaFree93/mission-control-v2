@@ -19,14 +19,6 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   
-  // Skip ESLint during build
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  
-  // Use SWC for faster minification (instead of Terser)
-  swcMinify: true,
-  
   // Disable source maps in production for smaller bundle
   productionBrowserSourceMaps: false,
   
