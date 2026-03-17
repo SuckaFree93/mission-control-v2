@@ -1,43 +1,29 @@
-// Database factory - chooses between SQLite and memory database based on environment
-import { AuthDatabase } from './database';
+// Database factory - Always use memory database for Vercel compatibility
 import { MemoryAuthDatabase } from './memory-db';
 
-export type DatabaseType = 'sqlite' | 'memory';
+export type DatabaseType = 'memory';
 
-let dbInstance: AuthDatabase | MemoryAuthDatabase | null = null;
-let currentDbType: DatabaseType = 'sqlite';
+let dbInstance: MemoryAuthDatabase | null = null;
+let currentDbType: DatabaseType = 'memory';
 
-export async function getDatabase(): Promise<AuthDatabase | MemoryAuthDatabase> {
+export async function getDatabase(): Promise<MemoryAuthDatabase> {
   if (dbInstance) {
     return dbInstance;
   }
 
-  // Try SQLite first, fall back to memory if it fails
+  // Always use memory database for Vercel compatibility
   try {
-    console.log('🔄 Attempting to initialize SQLite database...');
-    const sqliteDb = new AuthDatabase();
-    await sqliteDb.initialize();
-    dbInstance = sqliteDb;
-    currentDbType = 'sqlite';
-    console.log('✅ SQLite database initialized successfully');
+    console.log('🔄 Initializing Memory database (Vercel compatible)...');
+    const memoryDb = new MemoryAuthDatabase();
+    await memoryDb.initialize();
+    dbInstance = memoryDb;
+    currentDbType = 'memory';
+    console.log('✅ Memory database initialized successfully');
     return dbInstance;
-  } catch (sqliteError) {
-    console.warn('⚠️ SQLite initialization failed, falling back to memory database');
-    console.warn('Error details:', sqliteError.message);
-    
-    // Fall back to memory database
-    try {
-      const memoryDb = new MemoryAuthDatabase();
-      await memoryDb.initialize();
-      dbInstance = memoryDb;
-      currentDbType = 'memory';
-      console.log('✅ Memory database initialized as fallback');
-      return dbInstance;
-    } catch (memoryError) {
-      console.error('❌ Both SQLite and memory database initialization failed');
-      console.error('Memory database error:', memoryError.message);
-      throw new Error('Failed to initialize any database backend');
-    }
+  } catch (memoryError) {
+    console.error('❌ Memory database initialization failed');
+    console.error('Memory database error:', memoryError.message);
+    throw new Error('Failed to initialize database backend');
   }
 }
 
