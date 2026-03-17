@@ -1,7 +1,8 @@
 // JWT Authentication Service
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { getAuthDB, User, Session } from './database';
+import { getAuthDB } from './database-factory';
+import { User, Session } from './database';
 
 export interface AuthTokens {
   accessToken: string;

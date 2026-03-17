@@ -1,11 +1,17 @@
-// Authentication Database
-// SQLite for development, can be replaced with PostgreSQL for production
+// Authentication Database - Memory-based for Vercel compatibility
+// Note: SQLite imports removed for Vercel deployment
 
-import { Database } from 'sqlite';
-import { open } from 'sqlite';
-import * as sqlite3 from 'sqlite3';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+
+// SQLite types/interfaces for compatibility
+interface Database {
+  // Placeholder interface
+}
+
+interface sqlite3 {
+  Database: any;
+}
 
 export interface User {
   id: string;

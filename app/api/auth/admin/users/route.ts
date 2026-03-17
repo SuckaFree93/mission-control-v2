@@ -1,6 +1,6 @@
 // Admin Users Management API
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthDB } from '@/lib/auth/database';
+import { getAuthDB } from '@/lib/auth/database-factory';
 import { adminMiddleware } from '@/lib/auth/middleware';
 
 export async function GET(request: NextRequest) {
@@ -11,33 +11,34 @@ export async function GET(request: NextRequest) {
 
     const db = await getAuthDB();
     
-    // Use the public getter for database instance
-    const database = db.database;
-    
     // Get all users (excluding password hashes)
-    const stmt = await database.prepare(`
-      SELECT 
-        id, email, username, role,
-        created_at as createdAt, updated_at as updatedAt,
-        last_login_at as lastLoginAt, is_active as isActive
-      FROM users 
-      ORDER BY created_at DESC
-    `);
-    const users = await stmt.all();
+    const users = await db.getAllUsers();
+    
+    // Format users for response (exclude password hashes)
+    const formattedUsers = users.map(user => ({
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      lastLoginAt: user.lastLoginAt,
+      isActive: user.isActive
+    }));
 
     // Get statistics
     const stats = {
-      total: users.length,
-      active: users.filter(u => u.isActive).length,
-      admins: users.filter(u => u.role === 'admin').length,
-      users: users.filter(u => u.role === 'user').length,
-      viewers: users.filter(u => u.role === 'viewer').length,
+      total: formattedUsers.length,
+      active: formattedUsers.filter(u => u.isActive).length,
+      admins: formattedUsers.filter(u => u.role === 'admin').length,
+      users: formattedUsers.filter(u => u.role === 'user').length,
+      viewers: formattedUsers.filter(u => u.role === 'viewer').length,
     };
 
     return NextResponse.json({
       success: true,
       data: {
-        users,
+        users: formattedUsers,
         statistics: stats,
       },
       timestamp: new Date().toISOString(),
