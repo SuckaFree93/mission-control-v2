@@ -1,12 +1,13 @@
 // Agent Monitor Database Factory - Always use memory database for Vercel compatibility
 import { MemoryAgentMonitorDatabase } from './memory-db';
+import { AgentMonitorDatabaseInterface } from './database';
 
 export type AgentDbType = 'memory';
 
 let agentDbInstance: MemoryAgentMonitorDatabase | null = null;
 let currentAgentDbType: AgentDbType = 'memory';
 
-export async function getAgentMonitorDatabase(): Promise<MemoryAgentMonitorDatabase> {
+export async function getAgentMonitorDatabase(): Promise<AgentMonitorDatabaseInterface> {
   if (agentDbInstance) {
     return agentDbInstance;
   }

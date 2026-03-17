@@ -1,7 +1,8 @@
 // Memory-based database for Agent Monitor (Vercel/serverless compatible)
 import { AgentHealth, RecoveryAttempt, GatewayStatus } from './types';
+import { AgentMonitorDatabaseInterface } from './database';
 
-export class MemoryAgentMonitorDatabase {
+export class MemoryAgentMonitorDatabase implements AgentMonitorDatabaseInterface {
   private agents: Map<string, AgentHealth> = new Map();
   private recoveryAttempts: Map<string, RecoveryAttempt> = new Map();
   private gatewayStatuses: GatewayStatus[] = [];

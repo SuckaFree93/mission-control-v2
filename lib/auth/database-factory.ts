@@ -1,12 +1,13 @@
 // Database factory - Always use memory database for Vercel compatibility
 import { MemoryAuthDatabase } from './memory-db';
+import { AuthDatabaseInterface } from './database';
 
 export type DatabaseType = 'memory';
 
 let dbInstance: MemoryAuthDatabase | null = null;
 let currentDbType: DatabaseType = 'memory';
 
-export async function getDatabase(): Promise<MemoryAuthDatabase> {
+export async function getDatabase(): Promise<AuthDatabaseInterface> {
   if (dbInstance) {
     return dbInstance;
   }

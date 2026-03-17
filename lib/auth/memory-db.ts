@@ -1,9 +1,9 @@
-// Memory-based database fallback for Vercel/serverless environments
-// Used when SQLite fails to initialize
+// Memory-based database for Vercel/serverless environments
+// Primary database implementation for Vercel deployment
 
-import { User, Session } from './database';
+import { User, Session, AuthDatabaseInterface } from './database';
 
-export class MemoryAuthDatabase {
+export class MemoryAuthDatabase implements AuthDatabaseInterface {
   private users: Map<string, User> = new Map();
   private sessions: Map<string, Session> = new Map();
   private initialized = false;
