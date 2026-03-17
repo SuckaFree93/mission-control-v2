@@ -1,7 +1,7 @@
 // User Profile API (Protected)
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthService } from '@/lib/auth/jwt-service';
-import { getAuthDB } from '@/lib/auth/database';
+import { getAuthDB } from '@/lib/auth/database-factory';
 import { authenticate, getUserFromRequest } from '@/lib/auth/middleware';
 
 export async function GET(request: NextRequest) {
