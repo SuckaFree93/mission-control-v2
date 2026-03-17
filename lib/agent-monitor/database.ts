@@ -1,16 +1,35 @@
-// Agent Monitoring Database
-import { Database } from 'sqlite';
-import { open } from 'sqlite';
-import * as sqlite3 from 'sqlite3';
+// Agent Monitoring Database - SQLite with conditional imports
 import * as path from 'path';
 import * as fs from 'fs';
 import { AgentHealth, RecoveryAttempt, GatewayStatus } from './types';
+
+// SQLite imports will be loaded dynamically to avoid build errors on Vercel
+let sqlite: any = null;
+let sqlite3: any = null;
+let Database: any = null;
+let open: any = null;
 
 export class AgentMonitorDatabase {
   private db: Database | null = null;
 
   async initialize(): Promise<void> {
     try {
+      // Dynamically import SQLite to avoid build errors on Vercel
+      if (!sqlite || !sqlite3) {
+        try {
+          const sqliteModule = await import('sqlite');
+          const sqlite3Module = await import('sqlite3');
+          sqlite = sqliteModule;
+          sqlite3 = sqlite3Module;
+          Database = sqliteModule.Database;
+          open = sqliteModule.open;
+        } catch (importError) {
+          console.warn('SQLite modules not available, using null database');
+          this.db = null;
+          return;
+        }
+      }
+
       // Always use in-memory database for development to avoid file permission issues
       console.log('Initializing Agent Monitor Database (in-memory for development)...');
       
